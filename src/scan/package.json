@@ -1,0 +1,16 @@
+{
+    "name": "scan",
+    "version": "1.0.0",
+    "description": "Scan service using Express, MongoDB, and Playwright",
+    "main": "index.js",
+    "scripts": {
+      "start": "node index.js",
+      "test": "npx playwright test"
+    },
+    "dependencies": {
+      "express": "^4.18.2",
+      "mongoose": "^7.0.4",
+      "playwright": "^1.37.0"
+    }
+  }
+  
