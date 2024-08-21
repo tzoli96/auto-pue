@@ -10,4 +10,4 @@ RUN npm install playwright
 COPY . .
 
 EXPOSE 3002
-CMD ["npm", "start"]
+CMD ["sh", "-c", "npm install --force && npm start"]

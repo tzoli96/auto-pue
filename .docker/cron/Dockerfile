@@ -10,4 +10,4 @@ RUN npm install bull bull-board node-cron
 COPY . .
 
 EXPOSE 3003
-CMD ["npm", "start"]
+CMD ["sh", "-c", "npm install --force && npm start"]

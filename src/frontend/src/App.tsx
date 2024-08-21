@@ -1,9 +1,10 @@
 import React from 'react';
+import { Button } from "@/components/ui/button"
 
 const App: React.FC = () => {
     return (
         <div>
-            <h1>Hello from React Frontend with TypeScript!</h1>
+            <Button>Click me</Button>
         </div>
     );
 }
