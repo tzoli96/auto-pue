@@ -9,7 +9,7 @@ services:
     volumes:
       - mongo-data:/data/db
     networks:
-      - app-network
+      - auto-pue-network
 
   mongo-express:
     image: mongo-express:latest
@@ -21,7 +21,7 @@ services:
     depends_on:
       - mongodb
     networks:
-      - app-network
+      - auto-pue-network
 
   backend:
     build:
@@ -30,14 +30,16 @@ services:
     container_name: backend
     ports:
       - "3001:3001"
+      - "9229:9229"   # Debugger port
     volumes:
       - ./src/backend:/app
     environment:
-      MONGODB_URI: mongodb://mongodb:27017/mydatabase
+      - MONGODB_URI=mongodb://mongodb:27017/mydatabase
+      - NODE_ENV=development
     depends_on:
       - mongodb
     networks:
-      - app-network
+      - auto-pue-network
 
   scan:
     build:
@@ -53,7 +55,7 @@ services:
     depends_on:
       - mongodb
     networks:
-      - app-network
+      - auto-pue-network
 
   cron:
     build:
@@ -68,8 +70,9 @@ services:
       MONGODB_URI: mongodb://mongodb:27017/mydatabase
     depends_on:
       - mongodb
+      - redis
     networks:
-      - app-network
+      - auto-pue-network
 
   redis:
     image: redis:latest
@@ -77,7 +80,7 @@ services:
     ports:
       - "6379:6379"
     networks:
-      - app-network
+      - auto-pue-network
 
   frontend:
     build:
@@ -85,7 +88,7 @@ services:
       dockerfile: ../../.docker/frontend/Dockerfile
     container_name: frontend
     ports:
-      - "3000:3000"
+      - "8080:8080"
     volumes:
       - ./src/frontend:/app
     depends_on:
@@ -93,11 +96,11 @@ services:
       - scan
       - cron
     networks:
-      - app-network
+      - auto-pue-network
 
 volumes:
   mongo-data:
 
 networks:
-  app-network:
+  auto-pue-network:
     driver: bridge

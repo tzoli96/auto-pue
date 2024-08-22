@@ -8,4 +8,5 @@ RUN npm install
 COPY . .
 
 EXPOSE 3001
-CMD ["sh", "-c", "npm install --force && npm start"]
+CMD ["sh", "-c", "npm install --force"]
+CMD ["node", "--inspect=0.0.0.0:9229", "src/index.js"]

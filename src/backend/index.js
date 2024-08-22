@@ -1,16 +1,13 @@
 const express = require('express');
-const mongoose = require('mongoose');
+const connectToDatabase = require('./db/db');
+const indexRouter = require('./routes/index');
+const { port, mongoUri } = require('./config/config');
 
 const app = express();
-const port = 3001;
 
-mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => console.log('Connected to MongoDB'))
-    .catch(err => console.error('Could not connect to MongoDB', err));
+connectToDatabase(mongoUri);
 
-app.get('/', (req, res) => {
-    res.send('Hello from Backend!');
-});
+app.use('/', indexRouter);
 
 app.listen(port, () => {
     console.log(`Backend service running on port ${port}`);
