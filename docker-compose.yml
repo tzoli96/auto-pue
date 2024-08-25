@@ -30,7 +30,7 @@ services:
     container_name: backend
     ports:
       - "3001:3001"
-      - "9229:9229"   # Debugger port
+      - "9229:9229"
     volumes:
       - ./src/backend:/app
     environment:
