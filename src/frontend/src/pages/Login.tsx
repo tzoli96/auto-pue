@@ -1,12 +1,29 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import apiClient from '../api/axios';
+import { AuthContext } from '../context/AuthContext';
 
 export default function Login() {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+    const [username, setUsername] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
+    const { login } = useContext(AuthContext);
 
-    const handleLogin = (e: React.FormEvent) => {
+    const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
-        // Implement login logic here
+
+        try {
+            const response2 = await apiClient.get('/auth/test', { username, password });
+            console.log(response2)
+            const response = await apiClient.post('/auth/login', { username, password });
+            console.log(response)
+            const { user, token } = response.data;
+            login(user, token);
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                console.error('Login failed:', error.response?.data?.message || error.message);
+            } else {
+                console.error('An unexpected error occurred:', error);
+            }
+        }
     };
 
     return (
