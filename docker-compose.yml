@@ -34,7 +34,7 @@ services:
     volumes:
       - ./src/backend:/app
     environment:
-      - MONGODB_URI=mongodb://mongodb:27017/mydatabase
+      - MONGODB_URI=mongodb://mongodb:27017/autopue
       - NODE_ENV=development
     depends_on:
       - mongodb
@@ -51,7 +51,7 @@ services:
     volumes:
       - ./src/scan:/app
     environment:
-      MONGODB_URI: mongodb://mongodb:27017/mydatabase
+      MONGODB_URI: mongodb://mongodb:27017/autopue
     depends_on:
       - mongodb
     networks:
@@ -67,7 +67,7 @@ services:
     volumes:
       - ./src/cron:/app
     environment:
-      MONGODB_URI: mongodb://mongodb:27017/mydatabase
+      MONGODB_URI: mongodb://mongodb:27017/autopue
     depends_on:
       - mongodb
       - redis
