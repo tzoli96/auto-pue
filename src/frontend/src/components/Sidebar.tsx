@@ -11,11 +11,14 @@ export default function Sidebar() {
                         </a>
                     </li>
                     <li>
-                        <a href="/settings" className={cn("block py-2 text-gray-700 hover:bg-gray-100 rounded")}>
+                        <a
+                            href="#"
+                            className="block py-2 text-gray-400 cursor-not-allowed rounded"
+                            onClick={(e) => e.preventDefault()}
+                        >
                             Settings
                         </a>
                     </li>
-                    {/* További menüpontok */}
                 </ul>
             </nav>
         </aside>

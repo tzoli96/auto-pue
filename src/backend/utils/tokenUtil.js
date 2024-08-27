@@ -3,7 +3,7 @@ const config = require('../config/config');
 
 class TokenUtil {
     static generateToken(payload) {
-        return jwt.sign(payload, config.jwtSecret, { expiresIn: '1h' });
+        return jwt.sign(payload, config.jwtSecret, { expiresIn: '24h' });
     }
 
     static verifyToken(token) {

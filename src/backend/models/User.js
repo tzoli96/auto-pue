@@ -14,11 +14,11 @@ const UserSchema = new mongoose.Schema({
     },
     role: {
         type: String,
+        enum: ['user', 'admin'],
         default: 'user',
     },
 });
 
-// Jelszó titkosítása mentés előtt
 UserSchema.pre('save', async function (next) {
     if (!this.isModified('password')) {
         return next();
@@ -33,6 +33,6 @@ UserSchema.methods.comparePassword = async function (candidatePassword) {
     return await bcrypt.compare(candidatePassword, this.password);
 };
 
-const User = mongoose.model('User', UserSchema);
+const User = mongoose.models.User || mongoose.model('User', UserSchema);
 
 module.exports = User;

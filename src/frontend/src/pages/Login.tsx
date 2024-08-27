@@ -1,31 +1,41 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { useToast } from "@/components/ui/use-toast"
+
 import AuthService from '../services/authService';
 
 export default function Login() {
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const navigate = useNavigate();
+    const { toast } = useToast()
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
 
         try {
             const token = await AuthService.login(email, password);
-            toast.success('Login successful!', {
-                position: "top-right"
-            });
-            navigate('/dashboard');
+            console.log(token)
+            if (token) {
+                toast({
+                    title: 'Login successful!',
+                    status: 'success',
+                });
+                navigate('/dashboard');
+            }
+
         } catch (error) {
             if (error instanceof Error) {
-                toast.error('Login failed: ' + error.message, {
-                    position: "top-right"
+                toast({
+                    title: 'Login failed',
+                    description: error.message,
+                    status: 'error',
                 });
+
             } else {
-                toast.error('An unexpected error occurred', {
-                    position: "top-right"
+                toast({
+                    title: 'An unexpected error occurred',
+                    status: 'error',
                 });
             }
         }
@@ -33,7 +43,6 @@ export default function Login() {
 
     return (
         <div className="flex items-center justify-center h-screen bg-gray-100">
-            <ToastContainer />
             <form onSubmit={handleLogin} className="bg-white p-8 rounded shadow-md w-96">
                 <h2 className="text-2xl font-bold mb-6">Login</h2>
                 <div className="mb-4">

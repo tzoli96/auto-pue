@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 import Header from './Header';
 import Sidebar from './Sidebar';
 import Footer from './Footer';
+import { Toaster } from "@/components/ui/toaster"
 
 type LayoutProps = {
     children: ReactNode;
@@ -10,15 +11,14 @@ type LayoutProps = {
 export default function Layout({ children }: LayoutProps) {
     return (
         <div className="flex h-screen">
-            {/* Oldalsó navigáció */}
             <Sidebar />
 
-            {/* Fő tartalmi rész */}
             <div className="flex flex-1 flex-col">
                 <Header />
                 <main className="flex-1 p-6 bg-gray-100 overflow-y-auto">
                     {children}
                 </main>
+                <Toaster />
                 <Footer />
             </div>
         </div>
