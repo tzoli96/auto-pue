@@ -10,29 +10,48 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { resynchronizeDomainById, verifyWebshopSyncById } from '../services/domainServices.ts';
+import { useToast } from "@/components/ui/use-toast";  // Importáljuk a useToast hookot
 
 interface DropdownMenuActionsProps {
     domainId: string;
 }
 
 export const DropdownMenuActions: React.FC<DropdownMenuActionsProps> = ({ domainId }) => {
+    const { toast } = useToast();  // Használjuk a toast hookot
+
     const handleResyncDomain = async () => {
         try {
             await resynchronizeDomainById(domainId);
-            console.log(`Domain ${domainId} resynchronized successfully`);
+            toast({
+                title: `Domain ${domainId} resynchronized successfully!`,
+                status: 'success',
+            });
         } catch (error) {
             console.error(`Error resynchronizing domain ${domainId}:`, error);
-            // Itt megjeleníthetsz egy hibaüzenetet vagy toast értesítést
+            toast({
+                variant: "destructive",
+                title: 'Resynchronization failed',
+                description: `Error resynchronizing domain ${domainId}.`,
+                status: 'error',
+            });
         }
     };
 
     const handleVerifyWebshopSync = async () => {
         try {
             await verifyWebshopSyncById(domainId);
-            console.log(`Webshop synchronization for domain ${domainId} verified successfully`);
+            toast({
+                title: `Webshop synchronization for domain ${domainId} verified successfully!`,
+                status: 'success',
+            });
         } catch (error) {
             console.error(`Error verifying webshop sync for domain ${domainId}:`, error);
-            // Itt megjeleníthetsz egy hibaüzenetet vagy toast értesítést
+            toast({
+                variant: "destructive",
+                title: 'Verification failed',
+                description: `Error verifying webshop sync for domain ${domainId}.`,
+                status: 'error',
+            });
         }
     };
 

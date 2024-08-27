@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useToast } from "@/components/ui/use-toast"
+import { useToast } from "@/components/ui/use-toast";
 
 import AuthService from '../services/authService';
 
@@ -8,14 +8,13 @@ export default function Login() {
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const navigate = useNavigate();
-    const { toast } = useToast()
+    const { toast } = useToast();
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
 
         try {
             const token = await AuthService.login(email, password);
-            console.log(token)
             if (token) {
                 toast({
                     title: 'Login successful!',
@@ -23,17 +22,17 @@ export default function Login() {
                 });
                 navigate('/dashboard');
             }
-
         } catch (error) {
             if (error instanceof Error) {
                 toast({
+                    variant: "destructive",
                     title: 'Login failed',
                     description: error.message,
                     status: 'error',
                 });
-
             } else {
                 toast({
+                    variant: "destructive",
                     title: 'An unexpected error occurred',
                     status: 'error',
                 });

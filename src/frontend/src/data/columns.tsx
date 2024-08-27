@@ -4,16 +4,12 @@ import { DropdownMenuActions } from "../components/DropdownMenuActions.tsx";
 
 export const columns: ColumnDef<Domains>[] = [
     {
-        accessorKey: "status",
-        header: "Status",
+        accessorKey: "synced",
+        header: "Synced",
     },
     {
-        accessorKey: "email",
-        header: "Email",
-    },
-    {
-        accessorKey: "amount",
-        header: "Amount",
+        accessorKey: "url",
+        header: "Url",
     },
     {
         id: "actions",

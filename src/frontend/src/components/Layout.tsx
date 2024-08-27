@@ -2,7 +2,6 @@ import { ReactNode } from 'react';
 import Header from './Header';
 import Sidebar from './Sidebar';
 import Footer from './Footer';
-import { Toaster } from "@/components/ui/toaster"
 
 type LayoutProps = {
     children: ReactNode;
@@ -18,7 +17,6 @@ export default function Layout({ children }: LayoutProps) {
                 <main className="flex-1 p-6 bg-gray-100 overflow-y-auto">
                     {children}
                 </main>
-                <Toaster />
                 <Footer />
             </div>
         </div>
