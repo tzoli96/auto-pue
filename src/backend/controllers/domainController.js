@@ -13,7 +13,7 @@ class DomainController {
 
     async resynchronizeDomains(req, res) {
         try {
-            const message = domainService.resynchronizeDomains();
+            const message = await domainService.resynchronizeDomains();
             res.status(200).json({ message });
         } catch (error) {
             res.status(500).json({ message: error.message });
@@ -22,7 +22,7 @@ class DomainController {
 
     async verifyWebshopSync(req, res) {
         try {
-            const message = domainService.verifyWebshopSync();
+            const message = await domainService.verifyWebshopSync();
             res.status(200).json({ message });
         } catch (error) {
             res.status(500).json({ message: error.message });
@@ -32,7 +32,7 @@ class DomainController {
     async resynchronizeDomainById(req, res) {
         try {
             const { domainId } = req.params;
-            const message = domainService.resynchronizeDomainById(domainId);
+            const message = await domainService.resynchronizeDomainById(domainId);
             res.status(200).json({ message });
         } catch (error) {
             res.status(404).json({ message: error.message });
@@ -42,7 +42,7 @@ class DomainController {
     async verifyWebshopSyncById(req, res) {
         try {
             const { domainId } = req.params;
-            const message = domainService.verifyWebshopSyncById(domainId);
+            const message = await domainService.verifyWebshopSyncById(domainId);
             res.status(200).json({ message });
         } catch (error) {
             res.status(404).json({ message: error.message });

@@ -1,7 +1,7 @@
 const express = require('express');
 const connectToDatabase = require('./db/db');
 const setupBullBoard = require('./bullBoard/bullBoard');
-const scheduleCronJobs = require('./jobs/cronJobs');
+const scheduleCronJobs = require('./jobs/scheduleCronJobs');
 const { port, mongoUri } = require('./config/config');
 const indexRouter = require('./routes/index');
 

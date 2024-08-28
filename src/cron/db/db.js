@@ -6,7 +6,7 @@ async function connectToDatabase(uri) {
         console.log('Connected to MongoDB');
     } catch (err) {
         console.error('Could not connect to MongoDB', err);
-        process.exit(1); // Lépj ki, ha nem tud csatlakozni
+        process.exit(1);
     }
 }
 

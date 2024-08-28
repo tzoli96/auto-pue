@@ -1,39 +1,50 @@
+const apiClient = require('../api/apiClient');
+
 const fakeDomains = [
     { id: '1', url: 'example.com', synced: true },
     { id: '2', url: 'example.net', synced: false },
     { id: '3', url: 'example.org', synced: true },
 ];
-
 class DomainService {
     getDomains() {
         return fakeDomains;
     }
 
-    resynchronizeDomains() {
-        // Itt történne a valós logika
-        return 'All domains resynchronized successfully.';
-    }
-
-    verifyWebshopSync() {
-        // Itt történne a valós logika
-        return 'Webshop synchronization verified for all domains.';
-    }
-
-    resynchronizeDomainById(domainId) {
-        const domain = fakeDomains.find(d => d.id === domainId);
-        if (domain) {
-            return `Domain ${domain.name} resynchronized successfully.`;
-        } else {
-            throw new Error('Domain not found.');
+    async resynchronizeDomains() {
+        try {
+            const response = await apiClient.get('/resync-domains');
+            return response.data;
+        } catch (error) {
+            throw new Error(`Resynchronize Domains job failed: ${error.message}`);
         }
     }
 
-    verifyWebshopSyncById(domainId) {
-        const domain = fakeDomains.find(d => d.id === domainId);
-        if (domain) {
-            return `Webshop synchronization verified for domain ${domain.name}.`;
-        } else {
-            throw new Error('Domain not found.');
+
+    async verifyWebshopSync() {
+        try {
+            const response = await apiClient.get('/verify-webshop-sync');
+            return response.data;
+        } catch (error) {
+            throw new Error(`Verify Webshop Sync job failed: ${error.message}`);
+        }
+    }
+
+    async resynchronizeDomainById(domainId) {
+        try {
+            const response = await apiClient.get('/resync-domains/'+domainId);
+            return response.data;
+        } catch (error) {
+            throw new Error(`Verify Webshop Sync job failed: ${error.message}`);
+        }
+    }
+
+    async verifyWebshopSyncById(domainId) {
+
+        try {
+            const response = await apiClient.get('/verify-webshop-sync/'+domainId);
+            return response.data;
+        } catch (error) {
+            throw new Error(`Verify Webshop Sync job failed: ${error.message}`);
         }
     }
 }
