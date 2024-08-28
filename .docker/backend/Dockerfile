@@ -15,7 +15,7 @@ CMD ["sh", "-c", "npm install --force"]
 
 
 EXPOSE 3001
-CMD ["sh", "-c", "npm install --force && npm start"]
+CMD ["sh", "-c", "npm install --force && npm run dev"]
 
 #CMD ["tail", "-f", "/dev/null"]
 #CMD ["tail", "-f", "/dev/null"]

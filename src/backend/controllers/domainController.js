@@ -4,7 +4,7 @@ const domainService = require('../services/domainService');
 class DomainController {
     async getDomains(req, res) {
         try {
-            const domains = domainService.getDomains();
+            const domains = await domainService.getDomains();
             res.json(domains);
         } catch (error) {
             res.status(500).json({ message: error.message });

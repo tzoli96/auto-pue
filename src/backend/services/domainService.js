@@ -1,13 +1,9 @@
 const apiClient = require('../api/apiClient');
+const DomainRepository = require('./domainRepository');
 
-const fakeDomains = [
-    { id: '1', url: 'example.com', synced: true },
-    { id: '2', url: 'example.net', synced: false },
-    { id: '3', url: 'example.org', synced: true },
-];
 class DomainService {
-    getDomains() {
-        return fakeDomains;
+    async getDomains() {
+        return DomainRepository.getAllDomains();
     }
 
     async resynchronizeDomains() {

@@ -1,4 +1,5 @@
 const authService = require('../services/authService');
+const DomainRepository = require('../services/domainRepository');
 
 class AuthController {
     static async login(req, res) {
@@ -12,8 +13,8 @@ class AuthController {
     }
     static async test(req, res) {
         try {
-            const { user, token } = await authService.createUser('test@asd.hu', '123456');
-            res.json({ user, token });
+            const domainWithAttributes = await DomainRepository.getDomainById(100);
+            res.json({ domainWithAttributes });
         } catch (error) {
             res.status(400).json({ message: error.message });
         }

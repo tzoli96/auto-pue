@@ -1,12 +1,12 @@
 const playwrightService = require('../services/playwrightService');
+const configService = require('./configurationService');
+const DomainSynchronService = require('./scan/domainsynchronService');
 
 class ScanService {
+
     async resynchronizeDomains() {
         try {
-            const url = 'https://info.domain.hu/varolista/hu/ido.html';
-            const domContent = await playwrightService.getDOM(url);
-
-            console.log('DOM Content:', domContent);
+            const result = await DomainSynchronService.synchron()
 
             return 'All domains resynchronized successfully with the fetched DOM content.';
         } catch (error) {

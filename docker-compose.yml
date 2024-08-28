@@ -54,6 +54,7 @@ services:
       MONGODB_URI: mongodb://mongodb:27017/autopue
     depends_on:
       - mongodb
+      - backend
     networks:
       - auto-pue-network
 
@@ -71,6 +72,8 @@ services:
     depends_on:
       - mongodb
       - redis
+      - backend
+      - scan
     networks:
       - auto-pue-network
 

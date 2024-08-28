@@ -5,7 +5,8 @@
     "main": "index.js",
     "scripts": {
         "start": "node index.js",
-        "migrate": "migrate"
+        "migrate": "migrate",
+        "dev": "nodemon index.js"
     },
     "dependencies": {
         "axios": "^1.7.5",
@@ -14,6 +15,10 @@
         "jsonwebtoken": "^9.0.2",
         "migrate": "^2.1.0",
         "mongoose": "^7.0.4",
-        "mongoose-migrate": "^0.2.4"
+        "mongoose-migrate": "^0.2.4",
+        "mongoose-sequence": "^6.0.1"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.7"
     }
 }

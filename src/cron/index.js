@@ -7,14 +7,26 @@ const indexRouter = require('./routes/index');
 
 const app = express();
 
-connectToDatabase(mongoUri);
+async function startServer() {
+    try {
 
-setupBullBoard(app);
+        await connectToDatabase(mongoUri);
 
-scheduleCronJobs();
+        setupBullBoard(app);
 
-app.use('/', indexRouter);
+        await scheduleCronJobs();
 
-app.listen(port, () => {
-    console.log(`Cron service running on port ${port}`);
-});
+
+        app.use('/', indexRouter);
+
+        app.listen(port, () => {
+            console.log(`Cron service running on port ${port}`);
+        });
+    } catch (error) {
+        console.error('Error during server initialization:', error);
+        process.exit(1);
+    }
+}
+
+
+startServer();
