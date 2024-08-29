@@ -6,6 +6,11 @@ class PlaywrightService {
         const browser = await chromium.launch();
         const page = await browser.newPage();
 
+        // Ensure the URL includes the protocol
+        if (!url.startsWith('http://') && !url.startsWith('https://')) {
+            url = 'http://' + url;
+        }
+
         try {
             await page.goto(url);
             const content = await page.content();

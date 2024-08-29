@@ -17,25 +17,7 @@ interface DropdownMenuActionsProps {
 }
 
 export const DropdownMenuActions: React.FC<DropdownMenuActionsProps> = ({ domainId }) => {
-    const { toast } = useToast();  // Használjuk a toast hookot
-
-    const handleResyncDomain = async () => {
-        try {
-            await resynchronizeDomainById(domainId);
-            toast({
-                title: `Domain ${domainId} resynchronized successfully!`,
-                status: 'success',
-            });
-        } catch (error) {
-            console.error(`Error resynchronizing domain ${domainId}:`, error);
-            toast({
-                variant: "destructive",
-                title: 'Resynchronization failed',
-                description: `Error resynchronizing domain ${domainId}.`,
-                status: 'error',
-            });
-        }
-    };
+    const { toast } = useToast();
 
     const handleVerifyWebshopSync = async () => {
         try {
@@ -65,9 +47,6 @@ export const DropdownMenuActions: React.FC<DropdownMenuActionsProps> = ({ domain
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                <DropdownMenuItem onClick={handleResyncDomain}>
-                    Resynchronize Domain
-                </DropdownMenuItem>
                 <DropdownMenuItem onClick={handleVerifyWebshopSync}>
                     Verify Webshop Synchronization
                 </DropdownMenuItem>

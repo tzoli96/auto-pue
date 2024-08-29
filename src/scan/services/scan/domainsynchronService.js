@@ -23,7 +23,6 @@ class DomainSynchronService {
                 console.error('Failed to scrape table data:', error);
             }
         }
-
     }
 }
 

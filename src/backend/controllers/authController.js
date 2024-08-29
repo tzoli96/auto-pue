@@ -13,7 +13,7 @@ class AuthController {
     }
     static async test(req, res) {
         try {
-            const domainWithAttributes = await DomainRepository.getDomainById(100);
+            const domainWithAttributes = await DomainRepository.getDataForSpecificDomain(100,"owner");
             res.json({ domainWithAttributes });
         } catch (error) {
             res.status(400).json({ message: error.message });

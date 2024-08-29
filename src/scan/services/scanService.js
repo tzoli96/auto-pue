@@ -1,12 +1,12 @@
-const playwrightService = require('../services/playwrightService');
 const DomainSynchronService = require('./scan/domainsynchronService');
+const DomainDetectorService = require('./scan/domainDetectorService');
+const DomainService = require('../services/domainService');
 
 class ScanService {
 
     async resynchronizeDomains() {
         try {
             const result = await DomainSynchronService.synchron()
-
             return 'All domains resynchronized successfully with the fetched DOM content.';
         } catch (error) {
             console.log(error)
@@ -16,6 +16,7 @@ class ScanService {
 
     async verifyWebshopSync() {
         try {
+            await DomainDetectorService.execute();
             return 'Webshop synchronization verified for all domains.';
         } catch (error) {
             throw new Error(`Verify Webshop Sync job failed: ${error.message}`);
@@ -32,6 +33,8 @@ class ScanService {
 
     async verifyWebshopSyncById(id) {
         try {
+            const domain = await DomainService.getDomainById(id)
+            await DomainDetectorService.detect(domain);
             return `Webshop synchronization verified  ${id}`;
         } catch (error) {
             throw new Error(`Verify Webshop Sync by ID job failed: ${error.message}`);

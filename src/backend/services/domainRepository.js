@@ -1,11 +1,8 @@
 const Domain = require('../models/domain');
-const DomainAttributeValue = require('../models/domain_attribute');
 const { sanitizeDomainUrl } = require('../utils/urlSanitizer');
 const unidecode = require('unidecode');
 
-
 class DomainRepository {
-
     /**
      * Creates a new domain entry in the database.
      * @param {string} domainUrl - The URL of the domain to create.
@@ -16,7 +13,6 @@ class DomainRepository {
      */
     async createDomain(domainUrl, domainType, domainCreated) {
         try {
-            // Sanitize the domain URL
             const sanitizedDomainUrl = sanitizeDomainUrl(domainUrl);
             const sanitizedDomainType = unidecode(domainType);
 
@@ -32,23 +28,81 @@ class DomainRepository {
         }
     }
 
-    async getDomainById(id) {
+    /**
+     * Sets a key-value pair for a specific domain.
+     * @param {number} id - The domain ID.
+     * @param {string} key - The key of the attribute.
+     * @param {string} value - The value of the attribute.
+     * @returns {Promise<object>} - The updated domain object.
+     * @throws {Error} - Throws an error if the domain is not found or the update fails.
+     */
+    async setDataForSpecificDomain(id, key, value) {
         try {
-            const domain = await Domain.find({domain_id:id});
-
-            if (!domain) {
-                throw new Error('Domain not found');
-            }
-            const attributes = await DomainAttributeValue.find({ domain_id: domain.domain_id }).populate('attribute_id');
-            return {
-                domain,
-                attributes
-            };
+            const domain = await this.getDomainById(id);
+            await domain.setData(key, value);
+            return domain;
         } catch (error) {
-            throw new Error(`Failed to find domain by ID: ${error.message}`);
+            throw new Error(`Failed to set data for domain ID ${id}: ${error.message}`);
         }
     }
 
+    /**
+     * Retrieves the value of a specific attribute for a domain.
+     * @param {number} id - The domain ID.
+     * @param {string} key - The key of the attribute.
+     * @returns {Promise<string|null>} - The value of the attribute or null if not found.
+     * @throws {Error} - Throws an error if the domain is not found.
+     */
+    async getDataForSpecificDomain(id, key) {
+        try {
+            const domain = await this.getDomainById(id);
+            return domain.getData(key) || null;
+        } catch (error) {
+            throw new Error(`Failed to retrieve data for domain ID ${id}: ${error.message}`);
+        }
+    }
+
+    /**
+     * Retrieves a domain by its URL.
+     * @param {string} url - The URL of the domain.
+     * @returns {Promise<object|null>} - The domain object or null if not found.
+     * @throws {Error} - Throws an error if the domain retrieval fails.
+     */
+    async getDomainByUrl(url) {
+        try {
+            const domain = await Domain.findOne({ domain_url: url });
+            if (!domain) {
+                throw new Error('Domain not found');
+            }
+            return domain;
+        } catch (error) {
+            throw new Error(`Failed to retrieve domain by URL "${url}": ${error.message}`);
+        }
+    }
+
+    /**
+     * Retrieves a domain by its ID.
+     * @param {number} id - The domain ID.
+     * @returns {Promise<object>} - The domain object.
+     * @throws {Error} - Throws an error if the domain is not found.
+     */
+    async getDomainById(id) {
+        try {
+            const domain = await Domain.findOne({ domain_id: id });
+            if (!domain) {
+                throw new Error('Domain not found');
+            }
+            return domain;
+        } catch (error) {
+            throw new Error(`Failed to find domain by ID ${id}: ${error.message}`);
+        }
+    }
+
+    /**
+     * Retrieves all domains in the database.
+     * @returns {Promise<Array<object>>} - An array of domain objects.
+     * @throws {Error} - Throws an error if the retrieval fails.
+     */
     async getAllDomains() {
         try {
             return await Domain.find({});
@@ -57,19 +111,40 @@ class DomainRepository {
         }
     }
 
+    /**
+     * Updates a domain by its ID.
+     * @param {number} id - The domain ID.
+     * @param {object} updateData - The data to update the domain with.
+     * @returns {Promise<object|null>} - The updated domain object or null if not found.
+     * @throws {Error} - Throws an error if the update fails.
+     */
     async updateDomain(id, updateData) {
         try {
-            return await Domain.findByIdAndUpdate(id, updateData, { new: true });
+            const updatedDomain = await Domain.findOneAndUpdate({ domain_id: id }, updateData, { new: true });
+            if (!updatedDomain) {
+                throw new Error('Domain not found');
+            }
+            return updatedDomain;
         } catch (error) {
-            throw new Error(`Failed to update domain: ${error.message}`);
+            throw new Error(`Failed to update domain ID ${id}: ${error.message}`);
         }
     }
 
+    /**
+     * Deletes a domain by its ID.
+     * @param {number} id - The domain ID.
+     * @returns {Promise<object|null>} - The deleted domain object or null if not found.
+     * @throws {Error} - Throws an error if the deletion fails.
+     */
     async deleteDomain(id) {
         try {
-            return await Domain.findByIdAndDelete(id);
+            const deletedDomain = await Domain.findOneAndDelete({ domain_id: id });
+            if (!deletedDomain) {
+                throw new Error('Domain not found');
+            }
+            return deletedDomain;
         } catch (error) {
-            throw new Error(`Failed to delete domain: ${error.message}`);
+            throw new Error(`Failed to delete domain ID ${id}: ${error.message}`);
         }
     }
 }

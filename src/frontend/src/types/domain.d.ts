@@ -1,5 +1,6 @@
 export interface Domain {
-    id: string;
-    url: string;
-    synced: boolean;
+    domain_id: string;
+    domain_url: string;
+    domain_type: string;
+    domain_created_date: Date;
 }
