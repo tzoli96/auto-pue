@@ -13,4 +13,9 @@ router.post('/domains/:domainId/resync',AuthMiddleware.authenticateToken, domain
 
 router.post('/domains/:domainId/verify-webshop-sync',AuthMiddleware.authenticateToken, domainController.verifyWebshopSyncById);
 
+router.get('/domains/:domainId', domainController.getDomainById);
+router.post('/domains/create', domainController.createDomain);
+router.delete('/domains/delete', domainController.deleteDomain);
+router.put('/domains/update/:domainId', domainController.updateDomain);
+
 module.exports = router;

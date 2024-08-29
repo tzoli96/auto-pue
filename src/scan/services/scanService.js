@@ -1,5 +1,4 @@
 const playwrightService = require('../services/playwrightService');
-const configService = require('./configurationService');
 const DomainSynchronService = require('./scan/domainsynchronService');
 
 class ScanService {

@@ -17,7 +17,7 @@ class DateComparatorService {
     }
 
     async updateConfigDate(date) {
-        return configService.setConfig(this.configKey, date, `Updated on comparison: ${date}`);
+        return configService.setConfig(this.configKey, date);
     }
 
     async compareDates() {

@@ -1,5 +1,6 @@
 
 const domainService = require('../services/domainService');
+const DomainRepository = require('../services/domainRepository');
 
 class DomainController {
     async getDomains(req, res) {
@@ -43,6 +44,46 @@ class DomainController {
         try {
             const { domainId } = req.params;
             const message = await domainService.verifyWebshopSyncById(domainId);
+            res.status(200).json({ message });
+        } catch (error) {
+            res.status(404).json({ message: error.message });
+        }
+    }
+
+    async createDomain(req, res) {
+        try {
+            const { domainUrl,domainType,domainCreated } = req.body;
+            const message = await DomainRepository.createDomain(domainUrl,domainType,domainCreated);
+            res.status(200).json({ message });
+        } catch (error) {
+            res.status(404).json({ message: error.message });
+        }
+    }
+
+    async deleteDomain(req, res) {
+        try {
+            const { domainId } = req.body;
+            const message = await DomainRepository.deleteDomain(domainId);
+            res.status(200).json({ message });
+        } catch (error) {
+            res.status(404).json({ message: error.message });
+        }
+    }
+
+    async updateDomain(req, res) {
+        try {
+            const { domainId } = req.params;
+            const message = await DomainRepository.updateDomain(domainId,req.body);
+            res.status(200).json({ message });
+        } catch (error) {
+            res.status(404).json({ message: error.message });
+        }
+    }
+
+    async getDomainById(req, res) {
+        try {
+            const { domainId } = req.params;
+            const message = await DomainRepository.getDomainById(domainId);
             res.status(200).json({ message });
         } catch (error) {
             res.status(404).json({ message: error.message });

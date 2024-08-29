@@ -12,7 +12,6 @@ async function getJobDefinitions() {
             schedule: resyncSchedule || '* * * * *',
             action: async () => {
                 const data = await jobService.resynchronizeDomains();
-                console.log(data);
                 await taskQueue.add({ jobId: 'ResynchronizeDomains', data });
                 console.log('Resynchronize Domains job completed successfully');
             }
@@ -22,7 +21,6 @@ async function getJobDefinitions() {
             schedule: verifySchedule || '* * * * *',
             action: async () => {
                 const data = await jobService.verifyWebshopSync();
-                console.log(data);
                 await taskQueue.add({ jobId: 'VerifyWebshopSync', data });
                 console.log('Verify Webshop Synchronization job completed successfully');
             }

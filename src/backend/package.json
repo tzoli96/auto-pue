@@ -16,7 +16,8 @@
         "migrate": "^2.1.0",
         "mongoose": "^7.0.4",
         "mongoose-migrate": "^0.2.4",
-        "mongoose-sequence": "^6.0.1"
+        "mongoose-sequence": "^6.0.1",
+        "unidecode": "^1.1.0"
     },
     "devDependencies": {
         "nodemon": "^2.0.7"

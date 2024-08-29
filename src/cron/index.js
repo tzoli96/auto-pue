@@ -1,24 +1,18 @@
 const express = require('express');
-const connectToDatabase = require('./db/db');
 const setupBullBoard = require('./bullBoard/bullBoard');
 const scheduleCronJobs = require('./jobs/scheduleCronJobs');
 const { port, mongoUri } = require('./config/config');
-const indexRouter = require('./routes/index');
 
 const app = express();
 
 async function startServer() {
     try {
-
-        await connectToDatabase(mongoUri);
+        // Adding a 30-second delay before scheduling cron jobs
+        console.log('Waiting for 30 seconds before starting cron jobs...');
+        await new Promise(resolve => setTimeout(resolve, 30000));
 
         setupBullBoard(app);
-
         await scheduleCronJobs();
-
-
-        app.use('/', indexRouter);
-
         app.listen(port, () => {
             console.log(`Cron service running on port ${port}`);
         });

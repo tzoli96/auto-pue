@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-const apiClient = axios.create({
+const apiForScanClient = axios.create({
     baseURL: process.env.API_BASE_URL || 'http://scan:3002/api',
     timeout: 10000,
     headers: {
@@ -8,18 +8,18 @@ const apiClient = axios.create({
     }
 });
 
-apiClient.interceptors.request.use(
+apiForScanClient.interceptors.request.use(
     config => {
         return config;
     },
     error => Promise.reject(error)
 );
 
-apiClient.interceptors.response.use(
+apiForScanClient.interceptors.response.use(
     response => response,
     error => {
         return Promise.reject(error);
     }
 );
 
-module.exports = apiClient;
+module.exports = apiForScanClient;

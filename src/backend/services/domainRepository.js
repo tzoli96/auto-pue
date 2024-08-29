@@ -1,15 +1,31 @@
 const Domain = require('../models/domain');
 const DomainAttributeValue = require('../models/domain_attribute');
-const mongoose = require('mongoose');
-const {debug} = require("nodemon/lib/utils");
+const { sanitizeDomainUrl } = require('../utils/urlSanitizer');
+const unidecode = require('unidecode');
+
 
 class DomainRepository {
 
-    async createDomain(domainUrl,domainType,domainCreated) {
+    /**
+     * Creates a new domain entry in the database.
+     * @param {string} domainUrl - The URL of the domain to create.
+     * @param {string} domainType - The type of the domain.
+     * @param {Date} domainCreated - The date the domain was created.
+     * @returns {Promise<object>} - The created domain object.
+     * @throws {Error} - Throws an error if the creation fails.
+     */
+    async createDomain(domainUrl, domainType, domainCreated) {
         try {
-            const domain = new Domain(
-                { domain_url: domainUrl ,domain_type: domainType, domain_created_date: domainCreated}
-            );
+            // Sanitize the domain URL
+            const sanitizedDomainUrl = sanitizeDomainUrl(domainUrl);
+            const sanitizedDomainType = unidecode(domainType);
+
+            const domain = new Domain({
+                domain_url: sanitizedDomainUrl,
+                domain_type: sanitizedDomainType,
+                domain_created_date: domainCreated,
+            });
+
             return await domain.save();
         } catch (error) {
             throw new Error(`Failed to create domain: ${error.message}`);
@@ -18,12 +34,7 @@ class DomainRepository {
 
     async getDomainById(id) {
         try {
-            if (!mongoose.Types.ObjectId.isValid(id)) {
-                throw new Error('Invalid ID format');
-            }
-
             const domain = await Domain.find({domain_id:id});
-            throw new Error('Domain not found');
 
             if (!domain) {
                 throw new Error('Domain not found');

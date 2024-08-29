@@ -1,26 +1,36 @@
-const Configuration = require('../models/configuration');
+const apiForBackendClient = require("../api/apiForBackendClient");
 
 class ConfigurationService {
-    async setConfig(key, value, description = '') {
-        return await Configuration.findByIdAndUpdate(
-            key,
-            { value, description },
-            { upsert: true, new: true }
-        );
+
+    /**
+     * Sets a configuration key-value pair.
+     * @param {string} key - The configuration key.
+     * @param {string} value - The configuration value.
+     * @returns {Promise<object>} - The response data from the API.
+     * @throws {Error} - Throws an error if the request fails.
+     */
+    async setConfig(key, value) {
+        try {
+            const response = await apiForBackendClient.post('/config/set', { key, value });
+            return response.data.message;
+        } catch (error) {
+            throw new Error(`Failed to set config for key "${key}": ${error.message}`);
+        }
     }
 
+    /**
+     * Retrieves a configuration value for a given key.
+     * @param {string} key - The configuration key to retrieve.
+     * @returns {Promise<string>} - The value associated with the configuration key.
+     * @throws {Error} - Throws an error if the request fails.
+     */
     async getConfig(key) {
-        const config = await Configuration.findById(key);
-        return config ? config.value : null;
-    }
-
-    async deleteConfig(key) {
-        return await Configuration.findByIdAndDelete(key);
-    }
-
-
-    async getAllConfigs() {
-        return await Configuration.find();
+        try {
+            const response = await apiForBackendClient.post('/config/get', { key });
+            return response.data.message;
+        } catch (error) {
+            throw new Error(`Failed to get config for key "${key}": ${error.message}`);
+        }
     }
 }
 

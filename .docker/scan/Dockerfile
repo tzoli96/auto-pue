@@ -36,6 +36,25 @@ RUN apt-get update && apt-get install -y \
     libgl1-mesa-glx \
     libgles2-mesa \
     libgtk-3-0 \
+    gstreamer1.0-plugins-base \
+    gstreamer1.0-plugins-good \
+    gstreamer1.0-plugins-bad \
+    gstreamer1.0-plugins-ugly \
+    gstreamer1.0-libav \
+    gstreamer1.0-tools \
+    gstreamer1.0-x \
+    gstreamer1.0-alsa \
+    gstreamer1.0-gl \
+    gstreamer1.0-gtk3 \
+    gstreamer1.0-pulseaudio \
+    gstreamer1.0-libav \
+    libx264-dev \
+    libwoff1 \
+    libharfbuzz-icu0 \
+    libenchant-2-2 \
+    libsecret-1-0 \
+    libhyphen0 \
+    libmanette-0.2-0 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -59,4 +78,4 @@ COPY . .
 EXPOSE 3002
 
 # Parancs futtatása
-CMD ["sh", "-c", "npm install --force && npx playwright install && npm start"]
+CMD ["sh", "-c", "npm install --force && npx playwright install && npm run dev"]
