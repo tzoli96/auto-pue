@@ -17,15 +17,19 @@ const domainSchema = new mongoose.Schema({
     },
     attributes: {
         type: Map,
-        of: String,
+        of: mongoose.Schema.Types.Mixed,  // This allows storing different data types, including objects
         default: {}
     }
 });
 
 // Method to set an attribute
 domainSchema.methods.setData = function(attributeCode, attributeValue) {
-    this.attributes.set(attributeCode, attributeValue);
-    return this.save(); // This will save the updated attributes
+    if (typeof attributeValue === 'object') {
+        this.attributes.set(attributeCode, attributeValue);  // Tárolás objektumként
+    } else {
+        this.attributes.set(attributeCode, attributeValue);
+    }
+    return this.save(); // Az attributumok mentése
 };
 
 // Method to get an attribute

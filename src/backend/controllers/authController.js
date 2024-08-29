@@ -11,10 +11,19 @@ class AuthController {
             res.status(400).json({ message: error.message });
         }
     }
-    static async test(req, res) {
+    static async test2(req, res) {
         try {
             const domainWithAttributes = await DomainRepository.getDataForSpecificDomain(100,"owner");
             res.json({ domainWithAttributes });
+        } catch (error) {
+            res.status(400).json({ message: error.message });
+        }
+    }
+
+    static async test(req, res) {
+        try {
+            const { user, token } = await authService.createUser('test@asd.hu', '123456');
+            res.json({ user, token });
         } catch (error) {
             res.status(400).json({ message: error.message });
         }

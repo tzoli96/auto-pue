@@ -1,11 +1,9 @@
 const apiClient = require("../api/apiClient");
 
 class DomainService {
-
-
     /**
      * Get all domains.
-     * @returns {Promise<object>} - The response data from the API containing the created domain.
+     * @returns {Promise<object>} - The response data from the API containing all domains.
      * @throws {Error} - Throws an error if the request fails.
      */
     async getDomains() {
@@ -72,13 +70,13 @@ class DomainService {
      * Sets a specific key-value pair for a domain.
      * @param {string} domainId - The ID of the domain.
      * @param {string} key - The key of the attribute to set.
-     * @param {string} value - The value to set for the specified key.
+     * @param {string|object} value - The value to set for the specified key. Can be a string or an object.
      * @returns {Promise<object>} - The updated domain data after setting the attribute.
      * @throws {Error} - Throws an error if the request fails.
      */
     async setDataForSpecificDomain(domainId, key, value) {
         try {
-            const response = await apiClient.put(`/domains/${domainId}/set/${key}`, { value });
+            const response = await apiClient.put(`/domains/${domainId}/set`, { key, value });
             return response.data;
         } catch (error) {
             throw new Error(`Failed to set data for domain ID "${domainId}": ${error.message}`);
@@ -89,12 +87,12 @@ class DomainService {
      * Retrieves a specific key-value pair for a domain.
      * @param {string} domainId - The ID of the domain.
      * @param {string} key - The key of the attribute to retrieve.
-     * @returns {Promise<string>} - The value associated with the specified key.
+     * @returns {Promise<string|object>} - The value associated with the specified key.
      * @throws {Error} - Throws an error if the request fails.
      */
     async getDataForSpecificDomain(domainId, key) {
         try {
-            const response = await apiClient.get(`/domains/${domainId}/get/${key}`);
+            const response = await apiClient.post(`/domains/${domainId}/get`, { key });
             return response.data;
         } catch (error) {
             throw new Error(`Failed to get data for domain ID "${domainId}" and key "${key}": ${error.message}`);

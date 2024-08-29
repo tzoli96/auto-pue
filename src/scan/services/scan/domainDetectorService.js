@@ -33,10 +33,10 @@ class DomainDetectorService {
             const domainEntity = await DomainService.getDomainByUrl(domain.domain_url);
 
             if (result.isWebshop) {
-                await this.updateDomainData(domainEntity.id, result, true);
+                await this.updateDomainData(domainEntity.domain_id, result, true);
                 console.log(`${domain.domain_url} is likely a webshop.`);
             } else {
-                await this.updateDomainData(domainEntity.id, result, false);
+                await this.updateDomainData(domainEntity.domain_id, result, false);
                 console.log(`${domain.domain_url} does not appear to be a webshop.`);
             }
         } catch (error) {
@@ -57,21 +57,21 @@ class DomainDetectorService {
         try {
             await DomainService.setDataForSpecificDomain(domainId, "is_webshop", isWebshop ? "1" : "0");
 
-            if (result.foundKeywords.length > 0) {
+            if (result.foundKeywords) {
                 console.log(`Found ${result.foundKeywords.length} relevant keywords.`);
             }
 
-            if (result.phoneNumbers.length > 0) {
+            if (result.phoneNumbers) {
                 await DomainService.setDataForSpecificDomain(domainId, "phoneNumbers", result.phoneNumbers);
                 console.log('Phone numbers found and updated.');
             }
 
-            if (result.emailAddresses.length > 0) {
+            if (result.emailAddresses) {
                 await DomainService.setDataForSpecificDomain(domainId, "emailAddresses", result.emailAddresses);
                 console.log('Email addresses found and updated.');
             }
 
-            if (result.companyNames.length > 0) {
+            if (result.companyNames) {
                 await DomainService.setDataForSpecificDomain(domainId, "companyNames", result.companyNames);
                 console.log('Company names found and updated.');
             }

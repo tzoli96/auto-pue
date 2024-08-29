@@ -1,5 +1,6 @@
 const domainService = require('../services/domainService');
 const DomainRepository = require('../services/domainRepository');
+const { Parser } = require('json2csv');
 
 class DomainController {
     /**
@@ -13,6 +14,61 @@ class DomainController {
             res.json(domains);
         } catch (error) {
             res.status(500).json({ message: error.message });
+        }
+    }
+
+    /**
+     * Handles the request to retrieve all domains.
+     * @param {Request} req - The HTTP request object.
+     * @param {Response} res - The HTTP response object.
+     */
+    async getFillteredDomains(req, res) {
+        try {
+            const domains = await domainService.getFillteredDomains();
+            res.json(domains);
+        } catch (error) {
+            res.status(500).json({ message: error.message });
+        }
+    }
+
+    /**
+     * Handles the request to retrieve all filtered domains and export them as a CSV file.
+     * @param {Request} req - The HTTP request object.
+     * @param {Response} res - The HTTP response object.
+     */
+    async exportCsv(req, res) {
+        try {
+            const filteredDomains = await domainService.getFillteredDomains();
+
+            // Convert the attributes Map to a plain object
+            const transformedDomains = filteredDomains.map(domain => {
+                const attributes = Object.fromEntries(domain.attributes);
+
+                // Flatten the nested objects within attributes
+                const flatAttributes = {
+                    is_webshop: attributes.is_webshop,
+                    phoneNumbers: Object.values(attributes.phoneNumbers || {}).join(', '),
+                    emailAddresses: Object.values(attributes.emailAddresses || {}).join(', '),
+                    companyNames: Object.values(attributes.companyNames || {}).join(', '),
+                };
+
+                return {
+                    domain_url: domain.domain_url,
+                    domain_type: domain.domain_type,
+                    ...flatAttributes,
+                };
+            });
+
+            const fields = ['domain_url', 'domain_type', 'is_webshop', 'phoneNumbers', 'emailAddresses', 'companyNames'];
+            const opts = { fields };
+            const parser = new Parser(opts);
+            const csv = parser.parse(transformedDomains);
+
+            res.header('Content-Type', 'text/csv');
+            res.attachment('domains.csv');
+            res.send(csv);
+        } catch (error) {
+            res.status(500).send(`Failed to export domains to CSV: ${error.message}`);
         }
     }
 
@@ -139,10 +195,24 @@ class DomainController {
      * @param {Request} req - The HTTP request object.
      * @param {Response} res - The HTTP response object.
      */
+    async setDomainUpdate(req, res) {
+        try {
+            const { domainId } = req.params;
+            const updatedDomain = await DomainRepository.updateDomain(domainId, req.body);
+            res.status(200).json(updatedDomain);
+        } catch (error) {
+            res.status(404).json({ message: error.message });
+        }
+    }
+    /**
+     * Handles the request to set a specific key-value pair for a domain.
+     * @param {Request} req - The HTTP request object.
+     * @param {Response} res - The HTTP response object.
+     */
     async setDataForSpecificDomain(req, res) {
         try {
-            const { domainId, key } = req.params;
-            const { value } = req.body;
+            const { domainId } = req.params;
+            const { key , value } = req.body;
             const updatedDomain = await DomainRepository.setDataForSpecificDomain(domainId, key, value);
             res.status(200).json(updatedDomain);
         } catch (error) {
@@ -157,7 +227,7 @@ class DomainController {
      */
     async getDataForSpecificDomain(req, res) {
         try {
-            const { domainId, key } = req.params;
+            const { domainId, key } = req.body;
             const value = await DomainRepository.getDataForSpecificDomain(domainId, key);
             res.status(200).json(value);
         } catch (error) {

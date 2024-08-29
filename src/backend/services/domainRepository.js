@@ -32,7 +32,7 @@ class DomainRepository {
      * Sets a key-value pair for a specific domain.
      * @param {number} id - The domain ID.
      * @param {string} key - The key of the attribute.
-     * @param {string} value - The value of the attribute.
+     * @param {string|object} value - The value of the attribute.
      * @returns {Promise<object>} - The updated domain object.
      * @throws {Error} - Throws an error if the domain is not found or the update fails.
      */
@@ -110,6 +110,23 @@ class DomainRepository {
             throw new Error(`Failed to retrieve domains: ${error.message}`);
         }
     }
+
+    /**
+     * Retrieves all domains that are marked as a webshop and have at least one email address.
+     * @returns {Promise<Array<object>>} - An array of filtered domain objects.
+     * @throws {Error} - Throws an error if the retrieval fails.
+     */
+    async getFillteredDomains() {
+        try {
+            return await Domain.find({
+                "attributes.is_webshop": "1",
+                "attributes.emailAddresses": { $exists: true, $ne: {} }
+            });
+        } catch (error) {
+            throw new Error(`Failed to retrieve filtered domains: ${error.message}`);
+        }
+    }
+
 
     /**
      * Updates a domain by its ID.

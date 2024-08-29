@@ -2,6 +2,11 @@ const apiClient = require('../api/apiClient');
 const DomainRepository = require('./domainRepository');
 
 class DomainService {
+
+    async getFillteredDomains() {
+        return DomainRepository.getFillteredDomains();
+    }
+
     async getDomains() {
         return DomainRepository.getAllDomains();
     }

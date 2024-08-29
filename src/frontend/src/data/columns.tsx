@@ -12,6 +12,15 @@ export const columns: ColumnDef<Domains>[] = [
         header: "Domain Type",
     },
     {
+        accessorKey: "attributes.is_webshop",
+        header: "Is Webshop",
+        cell: ({ getValue }) => {
+            console.log(getValue())
+            const isWebshop = getValue() === "1" ? "Yes" : "No";
+            return isWebshop;
+        },
+    },
+    {
         accessorKey: "domain_created_date",
         header: "Domain Created",
     },

@@ -11,6 +11,11 @@ export default function Sidebar() {
                         </a>
                     </li>
                     <li>
+                        <a href="/filltered" className={cn("block py-2 text-gray-700 hover:bg-gray-100 rounded")}>
+                            Filltered data
+                        </a>
+                    </li>
+                    <li>
                         <a
                             href="#"
                             className="block py-2 text-gray-400 cursor-not-allowed rounded"

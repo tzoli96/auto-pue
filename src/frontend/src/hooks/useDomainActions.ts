@@ -1,16 +1,29 @@
 import { useState, useCallback } from 'react';
-import { getDomains, resynchronizeDomains, verifyWebshopSync } from '../services/domainServices.ts';
+import { updateDomain,getFillteredDomains, getDomains, resynchronizeDomains, verifyWebshopSync, getDomainByDomainId } from '../services/domainServices.ts';
 import { useToast } from "@/components/ui/use-toast";
+import { Domain } from '../types/domain';
 
 export function useDomainActions() {
     const [loading, setLoading] = useState<boolean>(false);
     const [data, setData] = useState<Domain[]>([]);
-    const { toast } = useToast();  // Toast hozzáadása
+    const { toast } = useToast();
 
     const loadDomains = useCallback(async () => {
         setLoading(true);
         try {
             const result = await getDomains();
+            setData(result);
+        } catch (error) {
+            console.error('Error fetching domains:', error);
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
+    const fillteredDomains = useCallback(async () => {
+        setLoading(true);
+        try {
+            const result = await getFillteredDomains();
             setData(result);
         } catch (error) {
             console.error('Error fetching domains:', error);
@@ -62,11 +75,54 @@ export function useDomainActions() {
         }
     }, [toast]);
 
+    const handleGetDomainById = useCallback(async (domainId: string) => {
+        setLoading(true);
+        try {
+            const domain = await getDomainByDomainId(domainId);
+            return domain;
+        } catch (error) {
+            console.error(`Error fetching domain with ID ${domainId}:`, error);
+            toast({
+                variant: "destructive",
+                title: 'Failed to load domain',
+                description: error.message,
+                status: 'error',
+            });
+        } finally {
+            setLoading(false);
+        }
+    }, [toast]);
+
+    const handleUpdateDomain = useCallback(async (domainId: string, updateData: Partial<Domain>) => {
+        setLoading(true);
+        try {
+            const updatedDomain = await updateDomain(domainId, updateData);
+            toast({
+                title: 'Domain updated successfully!',
+                status: 'success',
+            });
+            return updatedDomain;
+        } catch (error) {
+            console.error(`Error updating domain with ID ${domainId}:`, error);
+            toast({
+                variant: "destructive",
+                title: 'Failed to update domain',
+                description: error.message,
+                status: 'error',
+            });
+        } finally {
+            setLoading(false);
+        }
+    }, [toast]);
+
     return {
         data,
         loading,
         loadDomains,
+        fillteredDomains,
         handleResyncDomains,
         handleVerifyWebshopSync,
+        handleGetDomainById,
+        handleUpdateDomain
     };
 }
