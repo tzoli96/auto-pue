@@ -33,7 +33,7 @@ jobs:
           GIT_BRANCH: main
           SUDO_PASSWORD: ${{ secrets.SUDO_PASSWORD }}
         run: |
-          ssh $SSH_USER@$SSH_HOST"
+          ssh $SSH_USER@$SSH_HOST "
           cd /var/www/html &&
           git pull origin $GIT_BRANCH &&
           bash docker-compose-up.sh &&
