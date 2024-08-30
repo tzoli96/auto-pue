@@ -3,14 +3,6 @@ const authService = require("../services/authService");
 
 async function initializeConfigurations() {
 
-    const adminUser = await authService.createUser('admin@admin.com', 'admin9999');
-    if (!adminUser) {
-        console.log(`Admin user created`);
-    } else {
-        console.log(`Admin user cant created`);
-    }
-
-
     const configurations = [
         { key: 'query.resync_date', value: '', description: `Resynchronization date` },
         { key: 'job.schedule.resync', value: '0 * * * *', description: `Cron schedule for resync job` },

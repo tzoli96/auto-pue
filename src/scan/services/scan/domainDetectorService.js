@@ -56,9 +56,24 @@ class DomainDetectorService {
     async updateDomainData(domainId, result, isWebshop) {
         try {
             await DomainService.setDataForSpecificDomain(domainId, "is_webshop", isWebshop ? "1" : "0");
-
+            
             if (result.foundKeywords) {
                 console.log(`Found ${result.foundKeywords.length} relevant keywords.`);
+            }
+
+            if (result.error_code) {
+                await DomainService.setDataForSpecificDomain(domainId, "is_dns_setup", "0");
+                console.log('DNS has not been set up yet');
+            } else {
+                await DomainService.setDataForSpecificDomain(domainId, "is_dns_setup", "1");
+            }
+
+            if (result.defaultHostingPage) {
+                await DomainService.setDataForSpecificDomain(domainId, "is_default_hosting_page", "1");
+                console.log('Default hosting page updated.');
+            } else {
+                await DomainService.setDataForSpecificDomain(domainId, "is_default_hosting_page", "0");
+                console.log('No default hosting page updated.');
             }
 
             if (result.phoneNumbers) {

@@ -17,6 +17,14 @@ class WebshopDetectorService {
         ];
 
         this.serverProviderKeywords = [
+            'is registered with FORPSI and there is no content on it yet.',
+            'https://admin.websupport.hu/',
+            'https://www.domdom.hu/honlap/honlapkeszites',
+            'isrc = "HU/index.html";',
+            'https://www.rackhost.hu',
+            'https://go.cpanel.net/cleardnscache',
+            'Apache is functioning normally',
+            'https://dotroll.com/',
             'Hosting',
             'Server hosting',
             'Domain registration',
@@ -52,9 +60,22 @@ class WebshopDetectorService {
             let domContent = await playwrightService.getDOM(url);
             let lowerCaseContent = domContent.toLowerCase();
 
-            if (this._containsServerProviderKeywords(lowerCaseContent)) {
-                console.log('Detected server provider content, filtering out.');
+            if (domContent === "ERR_NAME_NOT_RESOLVED") {
                 return {
+                    defaultHostingPage: false,
+                    isWebshop: false,
+                    foundKeywords: false,
+                    phoneNumbers: false,
+                    emailAddresses:false,
+                    companyNames: false,
+                    error_code: true,
+                };
+            }
+
+            if (this._containsServerProviderKeywords(lowerCaseContent)) {
+                console.log('Detected server provider content, filtering out:' + url);
+                return {
+                    defaultHostingPage: true,
                     isWebshop: false,
                     reason: 'Server provider content detected',
                 };
@@ -99,6 +120,7 @@ class WebshopDetectorService {
             const isLikelyWebshop = this._isLikelyWebshop(foundKeywords);
 
             return {
+                defaultHostingPage: false,
                 isWebshop: isLikelyWebshop,
                 foundKeywords: this._convertSetToObject(foundKeywords, 'keyword'),
                 phoneNumbers: this._convertSetToObject(this.phoneNumbers, 'phone'),
@@ -106,6 +128,7 @@ class WebshopDetectorService {
                 companyNames: this._convertSetToObject(this.companyNames, 'company')
             };
         } catch (error) {
+            console.error(url);
             console.error(`Failed to determine if the site is a webshop: ${error.message}`);
             return {
                 isWebshop: false,

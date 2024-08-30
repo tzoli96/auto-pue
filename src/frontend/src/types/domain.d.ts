@@ -8,6 +8,7 @@ export interface Domain {
         phoneNumbers: Record<string, string>;
         emailAddresses: Record<string, string>;
         companyNames: Record<string, string>;
+        defaultHostingPage: Record<string, string>;
         [key: string]: string;
     };
 }

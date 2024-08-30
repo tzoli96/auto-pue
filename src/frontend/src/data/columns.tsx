@@ -21,6 +21,15 @@ export const columns: ColumnDef<Domains>[] = [
         },
     },
     {
+        accessorKey: "attributes.defaultHostingPage",
+        header: "Is Default Hosting Page",
+        cell: ({ getValue }) => {
+            console.log(getValue())
+            const defaultHostingPage = getValue() === "1" ? "Yes" : "No";
+            return defaultHostingPage;
+        },
+    },
+    {
         accessorKey: "domain_created_date",
         header: "Domain Created",
     },

@@ -79,10 +79,10 @@ class DomainController {
      */
     async resynchronizeDomains(req, res) {
         try {
-            const message = await domainService.resynchronizeDomains();
-            res.status(200).json({ message });
+            res.status(200).json({ success: true });
+            await domainService.resynchronizeDomains();
         } catch (error) {
-            res.status(500).json({ message: error.message });
+            console.log(error)
         }
     }
 
@@ -93,10 +93,10 @@ class DomainController {
      */
     async verifyWebshopSync(req, res) {
         try {
-            const message = await domainService.verifyWebshopSync();
-            res.status(200).json({ message });
+            res.status(200).json({ success: true });
+            await domainService.verifyWebshopSync();
         } catch (error) {
-            res.status(500).json({ message: error.message });
+            console.log(error)
         }
     }
 
