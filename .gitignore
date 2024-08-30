@@ -1,0 +1,22 @@
+# Ignore node_modules in specific directories
+/backend/node_modules/
+/cron/node_modules/
+/frontend/node_modules/
+/scan/node_modules/
+
+# Ignore package-lock.json in specific directories
+/backend/package-lock.json
+/cron/package-lock.json
+/frontend/package-lock.json
+/scan/package-lock.json
+
+# Ignore common node_modules and package-lock.json files at the root
+/node_modules/
+/package-lock.json
+
+# Other common Node.js and environment-specific ignores
+npm-debug.log
+yarn-error.log
+.DS_Store
+.env
+*.log
