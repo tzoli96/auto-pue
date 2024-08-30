@@ -1,6 +1,10 @@
 const configService = require('../services/configurationService');
+const authService = require("../services/authService");
 
 async function initializeConfigurations() {
+
+    await authService.createUser('admin@admin.com', 'admin9999');
+
     const configurations = [
         { key: 'query.resync_date', value: '', description: `Resynchronization date` },
         { key: 'job.schedule.resync', value: '0 * * * *', description: `Cron schedule for resync job` },
