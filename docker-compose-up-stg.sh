@@ -7,6 +7,6 @@ HOST_IP=$(ip addr show docker0 | grep 'inet ' | awk '{ print $2 }' | cut -d/ -f1
 export HOST_IP
 
 # Run Docker Compose with the extra_hosts setting
-docker-compose down --remove-orphans &&
+docker-compose down -v --remove-orphans &&
 docker-compose build --no-cache &&
 docker-compose up -d
