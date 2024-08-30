@@ -33,6 +33,7 @@ jobs:
           ssh $SSH_USER@$SSH_HOST "
           cd /var/www/html &&
           git pull origin $GIT_BRANCH &&
+          chmod -R 777 . &&
           bash /var/www/html/docker-compose-up-stg.sh &&
           yes | sudo docker system prune -a --volumes
           "
