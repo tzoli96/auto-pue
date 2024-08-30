@@ -3,7 +3,7 @@ name: Deploy to Server
 on:
   push:
     branches:
-      - main
+      - main  # Csak a 'main' ágra történő push indítja el a deploy folyamatot
 
 jobs:
   deploy:
@@ -13,10 +13,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Setup SSH
-        uses: webfactory/ssh-agent@v0.5.3
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      - name: Install SSH Client and Setup SSH Agent
+        run: |
+          sudo apt-get update && sudo apt-get install -y openssh-client
+          eval $(ssh-agent -s)
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" | tr -d '\r' | ssh-add -
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          ssh-keyscan ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
       - name: Deploy to Server
         env:
@@ -26,8 +30,9 @@ jobs:
           SUDO_PASSWORD: ${{ secrets.SUDO_PASSWORD }}
         run: |
           ssh $SSH_USER@$SSH_HOST "
-          cd /var/www/html &&
+          cd /path/to/your/project &&
           git pull origin $GIT_BRANCH &&
           bash docker-compose-up.sh &&
+          echo $SUDO_PASSWORD | sudo -S bash update-script.sh &&
           yes | sudo docker system prune -a --volumes
           "
