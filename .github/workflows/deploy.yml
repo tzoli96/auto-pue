@@ -21,6 +21,11 @@ jobs:
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
           ssh-keyscan ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Ensure SSH Key Permissions
+        run: |
+          echo "SSH key details:"
+          ls -la ~/.ssh/
           ssh-add -l  # Ellenőrizni, hogy a kulcs betöltődött-e az SSH agent-be
 
       - name: Debug SSH Connection
