@@ -2,7 +2,7 @@ const axios = require('axios');
 
 const apiClient = axios.create({
     baseURL: process.env.API_BASE_URL || 'http://scan:3002/api',
-    timeout: 10000,
+    timeout:   0,
     headers: {
         'Content-Type': 'application/json',
     }
