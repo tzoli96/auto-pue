@@ -31,7 +31,7 @@ jobs:
           ssh-add -l  # Ellenőrizni, hogy a kulcs betöltődött-e az SSH agent-be
           ssh -vvv ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "echo 'SSH connection successful'"
           ssh $SSH_USER@$SSH_HOST "
-          cd /path/to/your/project &&
+          cd /var/www/html &&
           git pull origin $GIT_BRANCH &&
           bash docker-compose-up.sh &&
           echo $SUDO_PASSWORD | sudo -S bash update-script.sh &&
