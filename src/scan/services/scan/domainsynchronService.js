@@ -7,7 +7,7 @@ class DomainSynchronService {
 
     async synchron() {
         const dateCompare = await dateComparatorService.compareDates();
-        if (dateCompare) {
+        if (!dateCompare) {
             try {
                 const scraper = new TableScraperService();
                 const data = await scraper.scrapeTable();
