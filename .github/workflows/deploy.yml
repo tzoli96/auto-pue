@@ -34,6 +34,6 @@ jobs:
           cd /var/www/html &&
           git pull origin $GIT_BRANCH &&
           bash docker-compose-up.sh &&
-          echo $SUDO_PASSWORD | sudo -S bash update-script.sh &&
+          -S bash update-script.sh &&
           yes | sudo docker system prune -a --volumes
           "
