@@ -22,6 +22,10 @@ jobs:
           chmod 700 ~/.ssh
           ssh-keyscan ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
+      - name: Debug SSH Connection
+        run: |
+          ssh -v ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "echo 'SSH connection successful'"
+
       - name: Deploy to Server
         env:
           SSH_HOST: ${{ secrets.SSH_HOST }}
@@ -29,8 +33,8 @@ jobs:
           GIT_BRANCH: main
           SUDO_PASSWORD: ${{ secrets.SUDO_PASSWORD }}
         run: |
-          ssh $SSH_USER@$SSH_HOST "
-          cd /path/to/your/project &&
+          ssh $SSH_USER@$SSH_HOST"
+          cd /var/www/html &&
           git pull origin $GIT_BRANCH &&
           bash docker-compose-up.sh &&
           echo $SUDO_PASSWORD | sudo -S bash update-script.sh &&
