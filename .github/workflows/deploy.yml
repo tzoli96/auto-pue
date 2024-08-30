@@ -13,25 +13,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install SSH Client and Setup SSH Agent
-        run: |
-          sudo apt-get update && sudo apt-get install -y openssh-client
-          eval "$(ssh-agent -s)"
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" | tr -d '\r' | ssh-add -
-          mkdir -p ~/.ssh
-          chmod 700 ~/.ssh
-          ssh-keyscan ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
-
-      - name: Ensure SSH Key Permissions
-        run: |
-          echo "SSH key details:"
-          ls -la ~/.ssh/
-          ssh-add -l  # Ellenőrizni, hogy a kulcs betöltődött-e az SSH agent-be
-
-      - name: Debug SSH Connection
-        run: |
-          ssh -vvv ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "echo 'SSH connection successful'"
-
       - name: Deploy to Server
         env:
           SSH_HOST: ${{ secrets.SSH_HOST }}
@@ -39,6 +20,16 @@ jobs:
           GIT_BRANCH: main
           SUDO_PASSWORD: ${{ secrets.SUDO_PASSWORD }}
         run: |
+          sudo apt-get update && sudo apt-get install -y openssh-client
+          eval "$(ssh-agent -s)"
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" | tr -d '\r' | ssh-add -
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          ssh-keyscan ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+          echo "SSH key details:"
+          ls -la ~/.ssh/
+          ssh-add -l  # Ellenőrizni, hogy a kulcs betöltődött-e az SSH agent-be
+          ssh -vvv ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "echo 'SSH connection successful'"
           ssh $SSH_USER@$SSH_HOST "
           cd /path/to/your/project &&
           git pull origin $GIT_BRANCH &&
