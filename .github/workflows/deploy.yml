@@ -32,7 +32,8 @@ jobs:
           ssh -vvv ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "echo 'SSH connection successful'"
           ssh $SSH_USER@$SSH_HOST "
           cd /var/www/html &&
-          git pull origin $GIT_BRANCH &&
+          git reset --hard &&
+          git pull origin $GIT_BRANCH --force &&
           chmod -R 777 . &&
           bash /var/www/html/docker-compose-up-stg.sh &&
           yes | sudo docker system prune -a --volumes
