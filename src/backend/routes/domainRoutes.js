@@ -4,6 +4,7 @@ const domainController = require('../controllers/domainController');
 const AuthMiddleware = require("../middlewares/authMiddleware");
 
 router.get('/domains', domainController.getDomains);
+router.get('/should-scan-domains', domainController.getShouldScan);
 router.get('/filltered-domains',AuthMiddleware.authenticateToken, domainController.getFillteredDomains);
 router.get('/export-csv', domainController.exportCsv);
 

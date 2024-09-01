@@ -17,7 +17,7 @@ const domainSchema = new mongoose.Schema({
     },
     attributes: {
         type: Map,
-        of: mongoose.Schema.Types.Mixed,  // This allows storing different data types, including objects
+        of: mongoose.Schema.Types.Mixed,
         default: {}
     }
 });

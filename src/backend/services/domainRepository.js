@@ -112,6 +112,32 @@ class DomainRepository {
     }
 
     /**
+     * Retrieves all domains that match specific criteria.
+     * - Includes domains where the `attributes` field is empty.
+     * - Includes domains where `is_dns_setup` is "0" or `is_default_hosting_page` is "1".
+     * @returns {Promise<Array<object>>} - An array of filtered domain objects.
+     * @throws {Error} - Throws an error if the retrieval fails.
+     */
+    async getShouldScan() {
+        try {
+            return await Domain.find({
+                $or: [
+                    { "attributes": {} }, // Match documents where the `attributes` field is empty
+                    {
+                        $or: [
+                            { "attributes.is_dns_setup": "0" }, // Match documents where `is_dns_setup` is "0"
+                            { "attributes.is_default_hosting_page": "1" } // Match documents where `is_default_hosting_page` is "1"
+                        ]
+                    }
+                ]
+            });
+        } catch (error) {
+            throw new Error(`Failed to retrieve domains: ${error.message}`);
+        }
+    }
+
+
+    /**
      * Retrieves all domains that are marked as a webshop and have at least one email address.
      * @returns {Promise<Array<object>>} - An array of filtered domain objects.
      * @throws {Error} - Throws an error if the retrieval fails.

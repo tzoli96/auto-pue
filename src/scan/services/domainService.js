@@ -8,7 +8,7 @@ class DomainService {
      */
     async getDomains() {
         try {
-            const response = await apiClient.get('/domains');
+            const response = await apiClient.get('/should-scan-domains');
             return response.data;
         } catch (error) {
             throw new Error(`Failed to get all domains: ${error.message}`);

@@ -3,6 +3,7 @@ const DomainRepository = require('../services/domainRepository');
 const { Parser } = require('json2csv');
 
 class DomainController {
+
     /**
      * Handles the request to retrieve all domains.
      * @param {Request} req - The HTTP request object.
@@ -11,6 +12,20 @@ class DomainController {
     async getDomains(req, res) {
         try {
             const domains = await domainService.getDomains();
+            res.json(domains);
+        } catch (error) {
+            res.status(500).json({ message: error.message });
+        }
+    }
+
+    /**
+     * Handles the request to retrieve all domains.
+     * @param {Request} req - The HTTP request object.
+     * @param {Response} res - The HTTP response object.
+     */
+    async getShouldScan(req, res) {
+        try {
+            const domains = await domainService.getShouldScan();
             res.json(domains);
         } catch (error) {
             res.status(500).json({ message: error.message });

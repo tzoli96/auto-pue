@@ -11,6 +11,10 @@ class DomainService {
         return DomainRepository.getAllDomains();
     }
 
+    async getShouldScan() {
+        return DomainRepository.getShouldScan();
+    }
+
     async resynchronizeDomains() {
         try {
             const response = await apiClient.get('/resync-domains');
