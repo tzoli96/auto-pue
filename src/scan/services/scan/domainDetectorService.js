@@ -33,6 +33,8 @@ class DomainDetectorService {
             const domainEntity = await DomainService.getDomainByUrl(domain.domain_url);
 
             if (result.isWebshop) {
+                console.log(" --> " + domain.domain_url)
+                console.log(result)
                 await this.updateDomainData(domainEntity.domain_id, result, true);
                 console.log(`${domain.domain_url} is likely a webshop.`);
             } else {
@@ -56,39 +58,29 @@ class DomainDetectorService {
     async updateDomainData(domainId, result, isWebshop) {
         try {
             await DomainService.setDataForSpecificDomain(domainId, "is_webshop", isWebshop ? "1" : "0");
-            
-            if (result.foundKeywords) {
-                console.log(`Found ${result.foundKeywords.length} relevant keywords.`);
-            }
 
             if (result.error_code) {
                 await DomainService.setDataForSpecificDomain(domainId, "is_dns_setup", "0");
-                console.log('DNS has not been set up yet');
             } else {
                 await DomainService.setDataForSpecificDomain(domainId, "is_dns_setup", "1");
             }
 
             if (result.defaultHostingPage) {
                 await DomainService.setDataForSpecificDomain(domainId, "is_default_hosting_page", "1");
-                console.log('Default hosting page updated.');
             } else {
                 await DomainService.setDataForSpecificDomain(domainId, "is_default_hosting_page", "0");
-                console.log('No default hosting page updated.');
             }
 
             if (result.phoneNumbers) {
                 await DomainService.setDataForSpecificDomain(domainId, "phoneNumbers", result.phoneNumbers);
-                console.log('Phone numbers found and updated.');
             }
 
             if (result.emailAddresses) {
                 await DomainService.setDataForSpecificDomain(domainId, "emailAddresses", result.emailAddresses);
-                console.log('Email addresses found and updated.');
             }
 
             if (result.companyNames) {
                 await DomainService.setDataForSpecificDomain(domainId, "companyNames", result.companyNames);
-                console.log('Company names found and updated.');
             }
 
         } catch (error) {

@@ -1,4 +1,5 @@
-const playwrightService = require('./playwrightService');
+const curlService = require('./curlService');
+const unidecode = require('unidecode');
 
 class WebshopDetectorService {
     constructor() {
@@ -48,16 +49,17 @@ class WebshopDetectorService {
 
         this.phoneRegex = /(?:\+36|06|36)\s*\d{1,2}\s*\d{3}\s*\d{4}/g;
         this.emailRegex = /[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]{2,}/g;
-        this.companyNameRegex = /\b(?:cég|kft|bt|zrt|vállalat|központ)\b\s*(kft|bt|zrt|rt|vállalat)?/gi;
-
-        this.phoneNumbers = new Set();
-        this.emailAddresses = new Set();
-        this.companyNames = new Set();
+        this.companyNameRegex = /(?:\b\w+\.?(?:\s+)?(?:cég|kft|bt|zrt|rt|vállalat|központ)\b(?:\.|\s*)?(?:kft|bt|zrt|rt|vállalat)?)/gi;
     }
 
     async isWebshop(url) {
         try {
-            let domContent = await playwrightService.getDOM(url);
+            this.phoneNumbers = new Set();
+            this.emailAddresses = new Set();
+            this.companyNames = new Set();
+
+
+            let domContent = await curlService.getDOM(url);
             let lowerCaseContent = domContent.toLowerCase();
 
             if (domContent === "ERR_NAME_NOT_RESOLVED") {
@@ -89,7 +91,7 @@ class WebshopDetectorService {
                 const contactPageLinks = this._findContactPageLinks(domContent);
                 if (contactPageLinks.length > 0) {
                     for (const link of contactPageLinks) {
-                        const contactDomContent = await playwrightService.getDOM(link);
+                        const contactDomContent = await curlService.getDOM(link);
                         this._extractContactInfo(contactDomContent);
 
                         if (this.phoneNumbers.size > 0 || this.emailAddresses.size > 0 || this.companyNames.size > 0) {
@@ -102,7 +104,7 @@ class WebshopDetectorService {
                         for (const path of predefinedPaths) {
                             const contactUrl = new URL(path, url).toString();
                             try {
-                                const contactDomContent = await playwrightService.getDOM(contactUrl);
+                                const contactDomContent = await curlService.getDOM(contactUrl);
                                 this._extractContactInfo(contactDomContent);
 
                                 if (this.phoneNumbers.size > 0 || this.emailAddresses.size > 0 || this.companyNames.size > 0) {
@@ -116,7 +118,6 @@ class WebshopDetectorService {
                 }
             }
 
-            console.log(foundKeywords)
             const isLikelyWebshop = this._isLikelyWebshop(foundKeywords);
 
             return {
@@ -173,7 +174,7 @@ class WebshopDetectorService {
         const obj = {};
         let index = 1;
         set.forEach(item => {
-            obj[`${prefix}_${index}`] = item;
+            obj[`${prefix}_${index}`] = unidecode(item);
             index++;
         });
         return obj;

@@ -1,6 +1,6 @@
-const playwrightService = require('../playwrightService');
 const configService = require('../configurationService');
 const URLs = require('../../enums/synchron');
+const curlService = require('../curlService');
 
 class DateComparatorService {
     constructor() {
@@ -9,7 +9,7 @@ class DateComparatorService {
     }
 
     async getLastModifiedDate() {
-        return playwrightService.getLastModifiedDate(this.url);
+        return curlService.getLastModifiedDate(this.url);
     }
 
     async getConfigDate() {

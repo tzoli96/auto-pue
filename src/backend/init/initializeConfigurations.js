@@ -5,8 +5,8 @@ async function initializeConfigurations() {
 
     const configurations = [
         { key: 'query.resync_date', value: '', description: `Resynchronization date` },
-        { key: 'job.schedule.resync', value: '0 * * * *', description: `Cron schedule for resync job` },
-        { key: 'job.schedule.verify', value: '0 * * * *', description: `Cron schedule for verify job` }
+        { key: 'job.schedule.resync', value: '0 */6 * * *', description: `Cron schedule for resync job` },
+        { key: 'job.schedule.verify', value: '0 */6 * * *', description: `Cron schedule for verify job` }
     ];
 
     for (const config of configurations) {
