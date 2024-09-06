@@ -102,8 +102,14 @@ class WebshopDetectorService {
                     if (this.phoneNumbers.size === 0 || this.emailAddresses.size === 0 || this.companyNames.size === 0) {
                         const predefinedPaths = ['/contact', '/kapcsolat', '/rolunk', '/about', '/aboutus'];
                         for (const path of predefinedPaths) {
-                            const contactUrl = new URL(path, url).toString();
                             try {
+                                const validUrl = this.ensureProtocol(url);
+
+                                if (!validUrl || !this.isValidUrl(validUrl)) {
+                                    throw new Error(`Invalid base URL: ${validUrl}`);
+                                }
+
+                                const contactUrl = new URL(path, validUrl).toString();
                                 const contactDomContent = await curlService.getDOM(contactUrl);
                                 this._extractContactInfo(contactDomContent);
 
@@ -111,7 +117,7 @@ class WebshopDetectorService {
                                     break;
                                 }
                             } catch (e) {
-                                console.log(`Failed to fetch contact page at ${contactUrl}: ${e.message}`);
+                                console.log(`Failed to fetch contact page at ${path}: ${e.message}`);
                             }
                         }
                     }
@@ -129,13 +135,41 @@ class WebshopDetectorService {
                 companyNames: this._convertSetToObject(this.companyNames, 'company')
             };
         } catch (error) {
-            console.error(url);
-            console.error(`Failed to determine if the site is a webshop: ${error.message}`);
+            console.error(`Failed to determine if the site is a webshop for URL: ${url}`);
+            console.error('Error stack:', error.stack); // Teljes hibakövetés
+            console.error('Error message:', error.message); // Hibaüzenet
+
+            // Logold le a hibás URL-t és a HTTP státuszkódot, ha van
+            if (error.response) {
+                console.error('Response status:', error.response.status);
+                console.error('Response headers:', error.response.headers);
+                console.error('Response data:', error.response.data);
+            } else if (error.request) {
+                console.error('Request was made but no response received.');
+                console.error('Request:', error.request);
+            }
+
             return {
                 isWebshop: false,
                 reason: 'Error occurred during analysis',
             };
         }
+    }
+
+    isValidUrl(url) {
+        try {
+            new URL(url);  // Ha ez nem dob hibát, akkor érvényes az URL
+            return true;
+        } catch (error) {
+            return false;
+        }
+    }
+
+    ensureProtocol(url) {
+        if (!url.startsWith('http://') && !url.startsWith('https://')) {
+            return 'http://' + url;
+        }
+        return url;
     }
 
     _extractContactInfo(domContent) {

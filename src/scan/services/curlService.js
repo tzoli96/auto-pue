@@ -71,9 +71,13 @@ class CurlService {
 
     fetchContent(url) {
         return new Promise((resolve, reject) => {
-            exec(`curl -sL ${url}`, (error, stdout, stderr) => {
+            exec(`curl -sL --max-time 30 ${url}`, (error, stdout, stderr) => {
                 if (error) {
+                    console.error(`curl error for URL ${url}: ${stderr || error.message}`);
                     reject(stderr || error.message);
+                } else if (stderr) {
+                    console.error(`curl stderr for URL ${url}: ${stderr}`);
+                    reject(stderr);
                 } else {
                     resolve(stdout);
                 }
@@ -81,10 +85,13 @@ class CurlService {
         });
     }
 
+
+
     fetchLastModifiedDate(url) {
         return new Promise((resolve, reject) => {
-            exec(`curl -sI ${url} | grep 'Last-Modified'`, (error, stdout, stderr) => {
+            exec(`curl -sI --max-time 30 ${url} | grep 'Last-Modified'`, (error, stdout, stderr) => {
                 if (error) {
+                    console.error(`curl error for URL ${url}: ${stderr || error.message}`);
                     reject(stderr || error.message);
                 } else {
                     const match = stdout.match(/Last-Modified:\s*(.*)/);

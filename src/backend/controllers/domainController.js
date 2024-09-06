@@ -109,9 +109,18 @@ class DomainController {
     async verifyWebshopSync(req, res) {
         try {
             res.status(200).json({ success: true });
-            await domainService.verifyWebshopSync();
+
+            domainService.verifyWebshopSync()
+                .then(() => {
+                    console.log('Webshop synchronization completed successfully.');
+                })
+                .catch((error) => {
+                    console.error('Verify Webshop Sync job failed:', error);
+                });
+
         } catch (error) {
-            console.log(error)
+            console.log(error);
+            res.status(500).json({ message: 'Error initiating webshop sync process' });
         }
     }
 
