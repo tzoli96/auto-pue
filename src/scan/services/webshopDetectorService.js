@@ -47,9 +47,9 @@ class WebshopDetectorService {
             'Szerver üzemeltetés'
         ];
 
-        this.phoneRegex = /(?:\+36|06|36)\s*\d{1,2}\s*\d{3}\s*\d{4}/g;
+        this.phoneRegex = /\b(?:\+36|06|36)[-\s]?\d{1,2}[-\s]?\d{3}[-\s]?\d{4}\b/g;
         this.emailRegex = /[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]{2,}/g;
-        this.companyNameRegex = /(?:\b\w+\.?(?:\s+)?(?:cég|kft|bt|zrt|rt|vállalat|központ)\b(?:\.|\s*)?(?:kft|bt|zrt|rt|vállalat)?)/gi;
+        this.companyNameRegex = /(?:\b\w+\.?(?:\s+)?(?:cég|kft|bt|zrt|vállalat|központ)\b(?:\.|\s*)?(?:kft|bt|zrt|vállalat)?)/gi;
     }
 
     async isWebshop(url) {
